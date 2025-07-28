@@ -4,7 +4,7 @@ import {
   Plane,
   Receipt,
   ShoppingBasket,
-  Heartbeat,
+  Heart,
   Landmark,
 } from "lucide-react";
 
@@ -96,6 +96,6 @@ export const categoryInfo: Record<Category, CategoryInfo> = {
   Travel: { icon: Plane, color: "text-blue-500" },
   Bills: { icon: Receipt, color: "text-yellow-500" },
   Shopping: { icon: ShoppingBasket, color: "text-purple-500" },
-  Health: { icon: Heartbeat, color: "text-green-500" },
+  Health: { icon: Heart, color: "text-green-500" },
   Income: { icon: Landmark, color: "text-emerald-500" },
 };
