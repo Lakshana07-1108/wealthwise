@@ -1,11 +1,7 @@
-import dynamic from 'next/dynamic'
 import Logo from "@/components/logo";
 import { Skeleton } from '@/components/ui/skeleton';
-
-const AuthForm = dynamic(() => import('@/components/auth-form').then(mod => mod.AuthForm), {
-  ssr: false,
-  loading: () => <AuthFormSkeleton />,
-});
+import { AuthForm } from "@/components/auth-form";
+import ClientOnly from "@/components/client-only";
 
 const AuthFormSkeleton = () => {
   return (
@@ -38,7 +34,9 @@ export default function AuthenticationPage() {
         <div className="flex justify-center">
           <Logo />
         </div>
-        <AuthForm />
+        <ClientOnly fallback={<AuthFormSkeleton />}>
+          <AuthForm />
+        </ClientOnly>
         <p className="px-8 text-center text-sm text-muted-foreground">
           By clicking continue, you agree to our{" "}
           <a
