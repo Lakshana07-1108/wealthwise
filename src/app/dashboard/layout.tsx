@@ -44,9 +44,9 @@ export default function DashboardLayout({
 }) {
   const navItems = [
     { href: "/dashboard", icon: Home, label: "Dashboard" },
-    { href: "#", icon: ArrowLeftRight, label: "Transactions" },
+    { href: "/dashboard/transactions", icon: ArrowLeftRight, label: "Transactions" },
     { href: "#", icon: Wallet, label: "Accounts" },
-    { href: "#", icon: CircleDollarSign, label: "Budgets", badge: "3" },
+    { href: "/dashboard/budgets", icon: CircleDollarSign, label: "Budgets", badge: "3" },
     { href: "/dashboard/settings", icon: Settings, label: "Settings" },
   ];
 
