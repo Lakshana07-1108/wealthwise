@@ -12,6 +12,7 @@ import { db, auth } from "@/lib/firebase";
 import type { Transaction } from "@/lib/types";
 import RecentTransactions from "@/components/dashboard/recent-transactions";
 import { useAuth } from "@/hooks/use-auth";
+import { transactions as initialTransactions } from "@/lib/data";
 
 export default function TransactionsPage() {
   const { user } = useAuth();
@@ -28,6 +29,8 @@ export default function TransactionsPage() {
         setTransactions(userTransactions);
       });
       return () => unsubscribe();
+    } else {
+      setTransactions(initialTransactions);
     }
   }, [user]);
 
@@ -37,6 +40,12 @@ export default function TransactionsPage() {
         collection(db, `users/${user.uid}/transactions`),
         transaction
       );
+    } else {
+       const newTransaction = {
+        ...transaction,
+        id: `txn-${transactions.length + 1}`,
+      };
+      setTransactions((prev) => [newTransaction, ...prev]);
     }
   };
 

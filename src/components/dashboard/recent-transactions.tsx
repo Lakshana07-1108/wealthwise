@@ -1,3 +1,4 @@
+
 import {
   Card,
   CardContent,
@@ -24,7 +25,7 @@ export default function RecentTransactions({
   addTransaction,
 }: {
   transactions: Transaction[];
-  addTransaction: (transaction: Omit<Transaction, "id">) => void;
+  addTransaction: (transaction: Omit<Transaction, "id">) => Promise<void>;
 }) {
   const formatCurrency = (amount: number, type: "income" | "expense") => {
     const formatted = new Intl.NumberFormat("en-US", {

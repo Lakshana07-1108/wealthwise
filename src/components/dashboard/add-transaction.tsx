@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -65,7 +66,7 @@ const categories: Category[] = [
 export function AddTransaction({
   addTransaction,
 }: {
-  addTransaction: (transaction: Omit<Transaction, "id" | "date"> & {date: any}) => void;
+  addTransaction: (transaction: Omit<Transaction, "id" | "date"> & {date: any}) => Promise<void>;
 }) {
   const [open, setOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
