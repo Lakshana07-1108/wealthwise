@@ -47,7 +47,7 @@ export default function DashboardLayout({
     { href: "#", icon: ArrowLeftRight, label: "Transactions" },
     { href: "#", icon: Wallet, label: "Accounts" },
     { href: "#", icon: CircleDollarSign, label: "Budgets", badge: "3" },
-    { href: "#", icon: Settings, label: "Settings" },
+    { href: "/dashboard/settings", icon: Settings, label: "Settings" },
   ];
 
   return (
@@ -157,7 +157,9 @@ export default function DashboardLayout({
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard/settings">Settings</Link>
+              </DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Logout</DropdownMenuItem>
