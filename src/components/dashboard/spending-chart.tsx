@@ -8,10 +8,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { transactions } from "@/lib/data";
-import type { Category } from "@/lib/types";
+import type { Transaction, Category } from "@/lib/types";
 
-export default function SpendingChart() {
+export default function SpendingChart({ transactions }: { transactions: Transaction[] }) {
   const expenseData = transactions
     .filter((t) => t.type === "expense")
     .reduce((acc, transaction) => {

@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { transactions } from "@/lib/data";
+import type { Transaction } from "@/lib/types";
 import { DollarSign, TrendingUp, TrendingDown, Wallet } from "lucide-react";
 
-export function OverviewCards() {
+export function OverviewCards({ transactions }: { transactions: Transaction[]}) {
   const totalIncome = transactions
     .filter((t) => t.type === "income")
     .reduce((acc, t) => acc + t.amount, 0);

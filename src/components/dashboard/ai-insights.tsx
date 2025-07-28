@@ -13,13 +13,13 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Lightbulb, Loader2 } from "lucide-react";
-import { transactions } from "@/lib/data";
+import type { Transaction } from "@/lib/types";
 import {
   analyzeSpendingHabits,
   AnalyzeSpendingHabitsOutput,
 } from "@/ai/flows/analyze-spending-habits";
 
-export default function AiInsights() {
+export default function AiInsights({ transactions }: { transactions: Transaction[] }) {
   const [isLoading, setIsLoading] = useState(false);
   const [analysis, setAnalysis] = useState<AnalyzeSpendingHabitsOutput | null>(
     null

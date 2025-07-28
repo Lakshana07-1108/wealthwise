@@ -14,9 +14,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { transactions, categoryInfo } from "@/lib/data";
+import { categoryInfo } from "@/lib/data";
+import type { Transaction } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import { AddTransaction } from "./add-transaction";
 
-export default function RecentTransactions() {
+export default function RecentTransactions({
+  transactions,
+  addTransaction,
+}: {
+  transactions: Transaction[];
+  addTransaction: (transaction: Omit<Transaction, "id">) => void;
+}) {
   const formatCurrency = (amount: number, type: "income" | "expense") => {
     const formatted = new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -27,11 +36,14 @@ export default function RecentTransactions() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Recent Transactions</CardTitle>
-        <CardDescription>
-          A list of your most recent income and expenses.
-        </CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+          <CardTitle>Recent Transactions</CardTitle>
+          <CardDescription>
+            A list of your most recent income and expenses.
+          </CardDescription>
+        </div>
+        <AddTransaction addTransaction={addTransaction} />
       </CardHeader>
       <CardContent>
         <Table>
