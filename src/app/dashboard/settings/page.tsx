@@ -26,37 +26,71 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, User } from "lucide-react";
 import * as React from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { db } from "@/lib/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
   email: z.string().email(),
-  avatar: z.string().url().optional().or(z.literal('')),
+  avatar: z.string().url().optional().or(z.literal("")),
 });
 
 export default function SettingsPage() {
+  const { user } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "John Doe",
-      email: "john.doe@example.com",
-      avatar: "https://placehold.co/100x100.png",
+      name: "",
+      email: "",
+      avatar: "",
     },
   });
 
+  React.useEffect(() => {
+    if (user) {
+      const fetchUserData = async () => {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          form.reset({
+            name: userData.name || "",
+            email: user.email || "",
+            avatar: userData.avatar || "",
+          });
+        }
+      };
+      fetchUserData();
+    }
+  }, [user, form]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (!user) return;
+
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsLoading(false);
-    
-    toast({
-      title: "Profile Updated",
-      description: "Your account details have been successfully updated.",
-    });
+    try {
+      const userRef = doc(db, "users", user.uid);
+      await setDoc(userRef, { ...values }, { merge: true });
+      toast({
+        title: "Profile Updated",
+        description: "Your account details have been successfully updated.",
+      });
+    } catch (error) {
+      console.error("Error updating profile: ", error);
+      toast({
+        variant: "destructive",
+        title: "Update Failed",
+        description: "Could not update your profile. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -72,7 +106,8 @@ export default function SettingsPage() {
         <CardHeader>
           <CardTitle>My Account</CardTitle>
           <CardDescription>
-            Update your profile information. Changes will be reflected across the app.
+            Update your profile information. Changes will be reflected across
+            the app.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -84,21 +119,27 @@ export default function SettingsPage() {
                 render={({ field }) => (
                   <FormItem className="flex items-center gap-4">
                     <Avatar className="h-20 w-20">
-                      <AvatarImage src={field.value} data-ai-hint="profile picture" />
+                      <AvatarImage
+                        src={field.value}
+                        data-ai-hint="profile picture"
+                      />
                       <AvatarFallback>
                         <User className="h-10 w-10" />
                       </AvatarFallback>
                     </Avatar>
-                     <div className="flex-grow">
+                    <div className="flex-grow">
                       <FormLabel>Profile Picture URL</FormLabel>
-                        <FormControl>
-                          <Input placeholder="https://example.com/avatar.png" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          Enter a URL for your new profile picture.
-                        </FormDescription>
-                        <FormMessage />
-                      </div>
+                      <FormControl>
+                        <Input
+                          placeholder="https://example.com/avatar.png"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Enter a URL for your new profile picture.
+                      </FormDescription>
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
@@ -126,7 +167,12 @@ export default function SettingsPage() {
                   <FormItem>
                     <FormLabel>Email Address</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="Your email address" {...field} />
+                      <Input
+                        type="email"
+                        placeholder="Your email address"
+                        {...field}
+                        disabled
+                      />
                     </FormControl>
                     <FormDescription>
                       This email will be used for login and notifications.
@@ -136,7 +182,9 @@ export default function SettingsPage() {
                 )}
               />
               <Button type="submit" disabled={isLoading}>
-                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isLoading && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
                 Save Changes
               </Button>
             </form>

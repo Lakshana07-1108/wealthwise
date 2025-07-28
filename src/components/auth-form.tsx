@@ -5,6 +5,12 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth, db } from "@/lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +22,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
@@ -43,16 +55,41 @@ export function AuthForm() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsLoading(false);
-
-    toast({
-      title: isLogin ? "Login Successful" : "Signup Successful",
-      description: "Welcome to WealthWise! Redirecting you to your dashboard.",
-    });
-
-    router.push("/dashboard");
+    try {
+      if (isLogin) {
+        await signInWithEmailAndPassword(auth, values.email, values.password);
+        toast({
+          title: "Login Successful",
+          description: "Welcome back! Redirecting you to your dashboard.",
+        });
+      } else {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          values.email,
+          values.password
+        );
+        const user = userCredential.user;
+        // Create a document for the new user in Firestore
+        await setDoc(doc(db, "users", user.uid), {
+          email: user.email,
+          createdAt: new Date(),
+        });
+        toast({
+          title: "Signup Successful",
+          description: "Welcome to WealthWise! Redirecting you to your dashboard.",
+        });
+      }
+      router.push("/dashboard");
+    } catch (error: any) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Authentication Failed",
+        description: error.message,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const toggleForm = () => {
@@ -104,8 +141,10 @@ export function AuthForm() {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : isLogin ? (
+                "Log In"
               ) : (
-                isLogin ? "Log In" : "Sign Up"
+                "Sign Up"
               )}
             </Button>
           </form>

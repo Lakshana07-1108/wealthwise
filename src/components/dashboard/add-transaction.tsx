@@ -47,7 +47,10 @@ const formSchema = z.object({
   amount: z.coerce.number().positive("Amount must be a positive number."),
   date: z.date(),
   type: z.enum(["income", "expense"]),
-  category: z.custom<Category>((val) => typeof val === "string" && val, "Please select a category."),
+  category: z.custom<Category>(
+    (val) => typeof val === "string" && val,
+    "Please select a category."
+  ),
 });
 
 const categories: Category[] = [
@@ -62,7 +65,7 @@ const categories: Category[] = [
 export function AddTransaction({
   addTransaction,
 }: {
-  addTransaction: (transaction: Omit<Transaction, "id">) => void;
+  addTransaction: (transaction: Omit<Transaction, "id" | "date"> & {date: any}) => void;
 }) {
   const [open, setOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -79,16 +82,25 @@ export function AddTransaction({
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    addTransaction(values);
-    setIsLoading(false);
-    setOpen(false);
-    form.reset();
-    toast({
-      title: "Transaction Added",
-      description: "Your new transaction has been successfully recorded.",
-    });
+    try {
+      await addTransaction({ ...values, date: values.date.toISOString() });
+      setOpen(false);
+      form.reset();
+      toast({
+        title: "Transaction Added",
+        description: "Your new transaction has been successfully recorded.",
+      });
+    } catch (error) {
+       toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to add transaction. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -169,7 +181,7 @@ export function AddTransaction({
                 </FormItem>
               )}
             />
-             <FormField
+            <FormField
               control={form.control}
               name="type"
               render={({ field }) => (
@@ -177,7 +189,14 @@ export function AddTransaction({
                   <FormLabel>Type</FormLabel>
                   <FormControl>
                     <RadioGroup
-                      onValueChange={field.onChange}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        if(value === 'income') {
+                          form.setValue('category', 'Income')
+                        } else {
+                          form.setValue('category', 'Food')
+                        }
+                      }}
                       defaultValue={field.value}
                       className="flex space-x-4"
                     >
@@ -205,14 +224,17 @@ export function AddTransaction({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a category" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {categories.map((category) => (
+                      {categories.filter(c => form.getValues('type') === 'income' ? c === 'Income' : c !== 'Income').map((category) => (
                         <SelectItem key={category} value={category}>
                           {category}
                         </SelectItem>

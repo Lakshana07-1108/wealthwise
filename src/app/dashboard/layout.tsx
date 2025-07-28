@@ -1,5 +1,11 @@
+
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { AuthProvider, useAuth } from "@/hooks/use-auth";
+import { auth } from "@/lib/firebase";
 import {
   Bell,
   CircleUser,
@@ -14,6 +20,7 @@ import {
   ArrowLeftRight,
   CircleDollarSign,
   Settings,
+  LogOut,
 } from "lucide-react";
 import Logo from "@/components/logo";
 
@@ -37,18 +44,39 @@ import {
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (!user) {
+      router.push("/");
+    }
+  }, [user, router]);
+  
+  const handleLogout = async () => {
+    await auth.signOut();
+    router.push("/");
+  };
+
   const navItems = [
     { href: "/dashboard", icon: Home, label: "Dashboard" },
-    { href: "/dashboard/transactions", icon: ArrowLeftRight, label: "Transactions" },
+    {
+      href: "/dashboard/transactions",
+      icon: ArrowLeftRight,
+      label: "Transactions",
+    },
     { href: "#", icon: Wallet, label: "Accounts" },
-    { href: "/dashboard/budgets", icon: CircleDollarSign, label: "Budgets", badge: "3" },
+    {
+      href: "/dashboard/budgets",
+      icon: CircleDollarSign,
+      label: "Budgets",
+      badge: "3",
+    },
     { href: "/dashboard/settings", icon: Settings, label: "Settings" },
   ];
+  
+  if (!user) return null;
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -126,9 +154,9 @@ export default function DashboardLayout({
                     <item.icon className="h-5 w-5" />
                     {item.label}
                     {item.badge && (
-                       <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                         {item.badge}
-                       </Badge>
+                      <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                        {item.badge}
+                      </Badge>
                     )}
                   </Link>
                 ))}
@@ -162,7 +190,10 @@ export default function DashboardLayout({
               </DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
@@ -171,5 +202,18 @@ export default function DashboardLayout({
         </main>
       </div>
     </div>
+  );
+}
+
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <AuthProvider>
+      <DashboardLayoutContent>{children}</DashboardLayoutContent>
+    </AuthProvider>
   );
 }
