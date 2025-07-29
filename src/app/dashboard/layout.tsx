@@ -21,6 +21,7 @@ import {
   CircleDollarSign,
   Settings,
   LogOut,
+  ScanLine,
 } from "lucide-react";
 import Logo from "@/components/logo";
 
@@ -73,6 +74,7 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
       label: "Budgets",
       badge: "3",
     },
+     { href: "/dashboard/scan", icon: ScanLine, label: "Scan Receipt" },
     { href: "/dashboard/settings", icon: Settings, label: "Settings" },
   ];
   
