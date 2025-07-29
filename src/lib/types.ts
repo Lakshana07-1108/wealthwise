@@ -21,3 +21,9 @@ export type CategoryInfo = {
   icon: LucideIcon;
   color: string;
 };
+
+export type Budget = {
+  id: string;
+  category: Category;
+  total: number;
+};
