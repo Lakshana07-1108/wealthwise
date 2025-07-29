@@ -66,7 +66,7 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
       icon: ArrowLeftRight,
       label: "Transactions",
     },
-    { href: "#", icon: Wallet, label: "Accounts" },
+    { href: "/dashboard/accounts", icon: Wallet, label: "Accounts" },
     {
       href: "/dashboard/budgets",
       icon: CircleDollarSign,
