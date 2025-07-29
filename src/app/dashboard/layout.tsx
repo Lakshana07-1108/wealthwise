@@ -50,7 +50,7 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     if (!user) {
-      router.push("/");
+      router.push("/login");
     }
   }, [user, router]);
   
