@@ -2,8 +2,8 @@
 "use client";
 
 import {
-  RadialBarChart,
-  RadialBar,
+  PieChart,
+  Pie,
   Legend,
   ResponsiveContainer,
   Tooltip,
@@ -54,15 +54,7 @@ export default function SpendingChart({
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={350}>
-          <RadialBarChart
-            cx="50%"
-            cy="50%"
-            innerRadius="20%"
-            outerRadius="80%"
-            data={expenseData}
-            startAngle={180}
-            endAngle={-180}
-          >
+          <PieChart>
             <Tooltip
               contentStyle={{
                 backgroundColor: "hsl(var(--card))",
@@ -71,23 +63,50 @@ export default function SpendingChart({
               }}
               cursor={{ fill: "hsl(var(--accent) / 0.2)" }}
             />
-            <RadialBar
-              minAngle={15}
-              label={{ position: "insideStart", fill: "#fff" }}
-              background
+            <Pie
+              data={expenseData}
               dataKey="total"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={120}
+              labelLine={false}
+              label={({
+                cx,
+                cy,
+                midAngle,
+                innerRadius,
+                outerRadius,
+                percent,
+                index,
+              }) => {
+                const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+                const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180));
+                const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180));
+                return (
+                  <text
+                    x={x}
+                    y={y}
+                    fill="white"
+                    textAnchor={x > cx ? "start" : "end"}
+                    dominantBaseline="central"
+                  >
+                    {`${(percent * 100).toFixed(0)}%`}
+                  </text>
+                );
+              }}
             >
               {expenseData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
-            </RadialBar>
+            </Pie>
             <Legend
               iconSize={10}
               layout="vertical"
               verticalAlign="middle"
               align="right"
             />
-          </RadialBarChart>
+          </PieChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
