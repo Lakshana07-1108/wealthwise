@@ -23,6 +23,7 @@ import {
   LogOut,
   ScanLine,
   Receipt,
+  Trophy,
 } from "lucide-react";
 import Logo from "@/components/logo";
 
@@ -75,6 +76,7 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
       label: "Budgets",
     },
     { href: "/dashboard/bills", icon: Receipt, label: "Bills" },
+    { href: "/dashboard/achievements", icon: Trophy, label: "Achievements" },
     { href: "/dashboard/scan", icon: ScanLine, label: "Scan Receipt" },
     { href: "/dashboard/settings", icon: Settings, label: "Settings" },
   ];
@@ -100,11 +102,6 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
                 >
                   <item.icon className="h-4 w-4" />
                   {item.label}
-                  {item.badge && (
-                    <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                      {item.badge}
-                    </Badge>
-                  )}
                 </Link>
               ))}
             </nav>
@@ -140,11 +137,6 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
                   >
                     <item.icon className="h-5 w-5" />
                     {item.label}
-                    {item.badge && (
-                      <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                        {item.badge}
-                      </Badge>
-                    )}
                   </Link>
                 ))}
               </nav>
