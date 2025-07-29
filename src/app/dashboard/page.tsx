@@ -6,6 +6,7 @@ import {
   collection,
   query,
   onSnapshot,
+  addDoc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { OverviewCards } from "@/components/dashboard/overview-cards";
@@ -14,6 +15,7 @@ import AiInsights from "@/components/dashboard/ai-insights";
 import { transactions as initialTransactions } from "@/lib/data";
 import type { Transaction } from "@/lib/types";
 import { useAuth } from "@/hooks/use-auth";
+import RecentTransactions from "@/components/dashboard/recent-transactions";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -35,6 +37,21 @@ export default function Dashboard() {
       setTransactions(initialTransactions);
     }
   }, [user]);
+  
+  const addTransaction = async (transaction: Omit<Transaction, "id">) => {
+    if (user) {
+      await addDoc(
+        collection(db, `users/${user.uid}/transactions`),
+        transaction
+      );
+    } else {
+       const newTransaction = {
+        ...transaction,
+        id: `txn-${transactions.length + 1}`,
+      };
+      setTransactions((prev) => [newTransaction, ...prev]);
+    }
+  };
 
   return (
     <>
@@ -52,6 +69,11 @@ export default function Dashboard() {
           <AiInsights transactions={transactions} />
         </div>
       </div>
+       <RecentTransactions
+        transactions={transactions}
+        addTransaction={addTransaction}
+        showViewAll={true}
+      />
     </>
   );
 }

@@ -19,13 +19,17 @@ import { categoryInfo } from "@/lib/data";
 import type { Transaction } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { AddTransaction } from "./add-transaction";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 export default function RecentTransactions({
   transactions,
   addTransaction,
+  showViewAll = false,
 }: {
   transactions: Transaction[];
   addTransaction: (transaction: Omit<Transaction, "id">) => Promise<void>;
+  showViewAll?: boolean;
 }) {
   const formatCurrency = (amount: number, type: "income" | "expense") => {
     const formatted = new Intl.NumberFormat("en-IN", {
@@ -44,7 +48,16 @@ export default function RecentTransactions({
             A list of your most recent income and expenses.
           </CardDescription>
         </div>
-        <AddTransaction addTransaction={addTransaction} />
+        <div className="flex items-center gap-4">
+          {showViewAll && (
+            <Button variant="outline" asChild>
+              <Link href="/dashboard/transactions">
+                View All <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          )}
+          <AddTransaction addTransaction={addTransaction} />
+        </div>
       </CardHeader>
       <CardContent>
         <Table>
