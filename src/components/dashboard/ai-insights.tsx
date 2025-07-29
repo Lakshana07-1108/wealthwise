@@ -34,7 +34,7 @@ export default function AiInsights({ transactions }: { transactions: Transaction
     const transactionHistory = transactions
       .map(
         (t) =>
-          `${t.date}: ${t.name} (${t.category}) - $${t.amount.toFixed(2)} (${
+          `${t.date}: ${t.name} (${t.category}) - ₹${t.amount.toFixed(2)} (${
             t.type
           })`
       )
@@ -74,17 +74,24 @@ export default function AiInsights({ transactions }: { transactions: Transaction
         {error && <p className="text-sm text-destructive">{error}</p>}
         {analysis && (
           <div className="space-y-4 text-sm">
-            <div>
-              <h3 className="font-semibold mb-1">Spending Summary</h3>
-              <p className="text-muted-foreground">{analysis.summary}</p>
-            </div>
-            <Separator />
-            <div>
-              <h3 className="font-semibold mb-1">Recommendations</h3>
-              <p className="text-muted-foreground whitespace-pre-line">
-                {analysis.recommendations}
-              </p>
-            </div>
+            <Card className="bg-muted/50">
+              <CardHeader>
+                <CardTitle className="text-base">Spending Summary</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">{analysis.summary}</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-muted/50">
+              <CardHeader>
+                <CardTitle className="text-base">Recommendations</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground whitespace-pre-line">
+                  {analysis.recommendations}
+                </p>
+              </CardContent>
+            </Card>
           </div>
         )}
         {!isLoading && !analysis && !error && (
@@ -96,7 +103,7 @@ export default function AiInsights({ transactions }: { transactions: Transaction
       <CardFooter>
         <Button
           onClick={handleAnalysis}
-          disabled={isLoading}
+          disabled={isLoading || transactions.length === 0}
           className="w-full"
         >
           {isLoading ? (

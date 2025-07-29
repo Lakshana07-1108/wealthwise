@@ -22,6 +22,7 @@ import {
   Settings,
   LogOut,
   ScanLine,
+  Receipt,
 } from "lucide-react";
 import Logo from "@/components/logo";
 
@@ -72,9 +73,9 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
       href: "/dashboard/budgets",
       icon: CircleDollarSign,
       label: "Budgets",
-      badge: "3",
     },
-     { href: "/dashboard/scan", icon: ScanLine, label: "Scan Receipt" },
+    { href: "/dashboard/bills", icon: Receipt, label: "Bills" },
+    { href: "/dashboard/scan", icon: ScanLine, label: "Scan Receipt" },
     { href: "/dashboard/settings", icon: Settings, label: "Settings" },
   ];
   

@@ -27,3 +27,11 @@ export type Budget = {
   category: Category;
   total: number;
 };
+
+export type Bill = {
+  id: string;
+  name: string;
+  amount: number;
+  dueDate: string;
+  isRecurring: boolean;
+};

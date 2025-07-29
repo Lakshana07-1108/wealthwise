@@ -13,28 +13,44 @@ import { OverviewCards } from "@/components/dashboard/overview-cards";
 import SpendingChart from "@/components/dashboard/spending-chart";
 import AiInsights from "@/components/dashboard/ai-insights";
 import { transactions as initialTransactions } from "@/lib/data";
-import type { Transaction } from "@/lib/types";
+import type { Transaction, Bill } from "@/lib/types";
 import { useAuth } from "@/hooks/use-auth";
 import RecentTransactions from "@/components/dashboard/recent-transactions";
+import UpcomingBills from "@/components/dashboard/upcoming-bills";
 
 export default function Dashboard() {
   const { user } = useAuth();
   const [transactions, setTransactions] = React.useState<Transaction[]>([]);
+  const [bills, setBills] = React.useState<Bill[]>([]);
 
   React.useEffect(() => {
     if (user) {
-      const q = query(collection(db, `users/${user.uid}/transactions`));
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const tq = query(collection(db, `users/${user.uid}/transactions`));
+      const unsubscribeTransactions = onSnapshot(tq, (querySnapshot) => {
         const userTransactions: Transaction[] = [];
         querySnapshot.forEach((doc) => {
           userTransactions.push({ id: doc.id, ...doc.data() } as Transaction);
         });
         setTransactions(userTransactions);
       });
-      return () => unsubscribe();
+
+      const bq = query(collection(db, `users/${user.uid}/bills`));
+      const unsubscribeBills = onSnapshot(bq, (querySnapshot) => {
+        const userBills: Bill[] = [];
+        querySnapshot.forEach((doc) => {
+          userBills.push({ id: doc.id, ...doc.data() } as Bill);
+        });
+        setBills(userBills);
+      });
+
+      return () => {
+        unsubscribeTransactions();
+        unsubscribeBills();
+      };
     } else {
       // Set initial transactions for guest users, or clear them
       setTransactions(initialTransactions);
+      setBills([]);
     }
   }, [user]);
   
@@ -65,8 +81,9 @@ export default function Dashboard() {
         <div className="xl:col-span-2">
           <SpendingChart transactions={transactions} />
         </div>
-        <div>
+        <div className="flex flex-col gap-4">
           <AiInsights transactions={transactions} />
+          <UpcomingBills bills={bills} />
         </div>
       </div>
        <RecentTransactions
