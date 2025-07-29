@@ -1,6 +1,14 @@
+
 "use client";
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
+import {
+  RadialBarChart,
+  RadialBar,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  Cell,
+} from "recharts";
 import {
   Card,
   CardContent,
@@ -10,7 +18,19 @@ import {
 } from "@/components/ui/card";
 import type { Transaction, Category } from "@/lib/types";
 
-export default function SpendingChart({ transactions }: { transactions: Transaction[] }) {
+const COLORS = [
+  "hsl(var(--chart-1))",
+  "hsl(var(--chart-2))",
+  "hsl(var(--chart-3))",
+  "hsl(var(--chart-4))",
+  "hsl(var(--chart-5))",
+];
+
+export default function SpendingChart({
+  transactions,
+}: {
+  transactions: Transaction[];
+}) {
   const expenseData = transactions
     .filter((t) => t.type === "expense")
     .reduce((acc, transaction) => {
@@ -28,26 +48,22 @@ export default function SpendingChart({ transactions }: { transactions: Transact
     <Card className="h-full">
       <CardHeader>
         <CardTitle>Spending Overview</CardTitle>
-        <CardDescription>Your spending breakdown for this month.</CardDescription>
+        <CardDescription>
+          Your spending breakdown for this month.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={350}>
-          <BarChart data={expenseData}>
-            <XAxis
-              dataKey="name"
-              stroke="#888888"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-            />
-            <YAxis
-              stroke="#888888"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => `$${value}`}
-            />
-             <Tooltip
+          <RadialBarChart
+            cx="50%"
+            cy="50%"
+            innerRadius="20%"
+            outerRadius="80%"
+            data={expenseData}
+            startAngle={180}
+            endAngle={-180}
+          >
+            <Tooltip
               contentStyle={{
                 backgroundColor: "hsl(var(--card))",
                 border: "1px solid hsl(var(--border))",
@@ -55,8 +71,23 @@ export default function SpendingChart({ transactions }: { transactions: Transact
               }}
               cursor={{ fill: "hsl(var(--accent) / 0.2)" }}
             />
-            <Bar dataKey="total" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-          </BarChart>
+            <RadialBar
+              minAngle={15}
+              label={{ position: "insideStart", fill: "#fff" }}
+              background
+              dataKey="total"
+            >
+              {expenseData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </RadialBar>
+            <Legend
+              iconSize={10}
+              layout="vertical"
+              verticalAlign="middle"
+              align="right"
+            />
+          </RadialBarChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
