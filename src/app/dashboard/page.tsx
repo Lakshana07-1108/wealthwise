@@ -4,15 +4,12 @@
 import * as React from "react";
 import {
   collection,
-  addDoc,
   query,
   onSnapshot,
-  doc,
 } from "firebase/firestore";
-import { db, auth } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
 import { OverviewCards } from "@/components/dashboard/overview-cards";
 import SpendingChart from "@/components/dashboard/spending-chart";
-import RecentTransactions from "@/components/dashboard/recent-transactions";
 import AiInsights from "@/components/dashboard/ai-insights";
 import { transactions as initialTransactions } from "@/lib/data";
 import type { Transaction } from "@/lib/types";
@@ -39,24 +36,6 @@ export default function Dashboard() {
     }
   }, [user]);
 
-  const addTransaction = async (
-    transaction: Omit<Transaction, "id">
-  ) => {
-    if (user) {
-      await addDoc(
-        collection(db, `users/${user.uid}/transactions`),
-        transaction
-      );
-    } else {
-      // Handle guest user case if needed
-      const newTransaction = {
-        ...transaction,
-        id: `txn-${transactions.length + 1}`,
-      };
-      setTransactions((prev) => [newTransaction, ...prev]);
-    }
-  };
-
   return (
     <>
       <div className="flex items-center">
@@ -73,10 +52,6 @@ export default function Dashboard() {
           <AiInsights transactions={transactions} />
         </div>
       </div>
-      <RecentTransactions
-        transactions={transactions}
-        addTransaction={addTransaction}
-      />
     </>
   );
 }
