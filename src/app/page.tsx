@@ -1,6 +1,6 @@
 
 import Link from "next/link";
-import { ArrowRight, BarChart, Bot, Gem, LayoutDashboard } from "lucide-react";
+import { ArrowRight, BarChart, Bot, LayoutDashboard } from "lucide-react";
 import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -63,12 +63,11 @@ export default function LandingPage() {
            <div className="flex flex-col lg:flex-row items-center justify-center gap-12">
              <div className="lg:w-1/2">
                 <Image 
-                  src="https://placehold.co/600x400.png"
-                  alt="Dashboard preview" 
+                  src="/hero-image.png"
+                  alt="WealthWise hero image" 
                   width={600}
                   height={400}
-                  className="rounded-lg shadow-xl"
-                  data-ai-hint="dashboard financial"
+                  className="rounded-lg"
                 />
              </div>
              <div className="lg:w-1/2">
