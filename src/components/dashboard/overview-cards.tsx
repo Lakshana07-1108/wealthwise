@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Transaction } from "@/lib/types";
-import { DollarSign, TrendingUp, TrendingDown, Wallet } from "lucide-react";
+import { IndianRupee, TrendingUp, TrendingDown, Wallet } from "lucide-react";
 
 export function OverviewCards({ transactions }: { transactions: Transaction[]}) {
   const totalIncome = transactions
@@ -33,15 +33,15 @@ export function OverviewCards({ transactions }: { transactions: Transaction[]}) 
     {
       title: "Savings Goal",
       amount: 7500,
-      icon: DollarSign,
-      change: "75% of $10,000 goal",
+      icon: IndianRupee,
+      change: "75% of ₹10,000 goal",
     },
   ];
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("en-IN", {
       style: "currency",
-      currency: "USD",
+      currency: "INR",
     }).format(amount);
   };
 

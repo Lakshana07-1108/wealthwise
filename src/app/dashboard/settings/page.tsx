@@ -64,6 +64,12 @@ export default function SettingsPage() {
             email: user.email || "",
             avatar: userData.avatar || "",
           });
+        } else {
+            form.reset({
+            name: "",
+            email: user.email || "",
+            avatar: "",
+          });
         }
       };
       fetchUserData();
@@ -171,7 +177,6 @@ export default function SettingsPage() {
                         type="email"
                         placeholder="Your email address"
                         {...field}
-                        disabled
                       />
                     </FormControl>
                     <FormDescription>

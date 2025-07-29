@@ -16,11 +16,20 @@ import { PlusCircle } from "lucide-react";
 
 export default function BudgetsPage() {
   const budgets = [
-    { name: "Groceries", spent: 350, total: 500, remaining: 150 },
-    { name: "Dining Out", spent: 150, total: 200, remaining: 50 },
-    { name: "Shopping", spent: 500, total: 600, remaining: 100 },
-    { name: "Transport", spent: 80, total: 100, remaining: 20 },
+    { name: "Groceries", spent: 30000, total: 40000, remaining: 10000 },
+    { name: "Dining Out", spent: 12000, total: 15000, remaining: 3000 },
+    { name: "Shopping", spent: 45000, total: 50000, remaining: 5000 },
+    { name: "Transport", spent: 7000, total: 8000, remaining: 1000 },
   ];
+  
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 2,
+    }).format(amount);
+  };
+
 
   return (
     <>
@@ -37,7 +46,7 @@ export default function BudgetsPage() {
             <CardHeader>
               <CardTitle>{budget.name}</CardTitle>
               <CardDescription>
-                ${budget.remaining.toFixed(2)} remaining
+                {formatCurrency(budget.remaining)} remaining
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -45,7 +54,7 @@ export default function BudgetsPage() {
             </CardContent>
             <CardFooter>
               <p className="text-sm text-muted-foreground">
-                ${budget.spent.toFixed(2)} of ${budget.total.toFixed(2)} spent
+                {formatCurrency(budget.spent)} of {formatCurrency(budget.total)} spent
               </p>
             </CardFooter>
           </Card>

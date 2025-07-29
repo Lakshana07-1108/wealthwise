@@ -14,10 +14,17 @@ import { PlusCircle, CreditCard, Banknote } from "lucide-react";
 
 export default function AccountsPage() {
   const accounts = [
-    { name: "Checking Account", type: "Bank", balance: 5250.00, icon: Banknote },
-    { name: "Savings Account", type: "Bank", balance: 15000.75, icon: Banknote },
-    { name: "Primary Credit Card", type: "Credit Card", balance: -850.50, icon: CreditCard },
+    { name: "Checking Account", type: "Bank", balance: 450000.00, icon: Banknote },
+    { name: "Savings Account", type: "Bank", balance: 1250000.75, icon: Banknote },
+    { name: "Primary Credit Card", type: "Credit Card", balance: -70000.50, icon: CreditCard },
   ];
+  
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+    }).format(amount);
+  };
 
   return (
     <>
@@ -36,7 +43,7 @@ export default function AccountsPage() {
               <account.icon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">${account.balance.toFixed(2)}</div>
+              <div className="text-2xl font-bold">{formatCurrency(account.balance)}</div>
               <p className="text-xs text-muted-foreground">{account.type}</p>
             </CardContent>
           </Card>
