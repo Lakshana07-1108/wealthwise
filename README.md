@@ -23,50 +23,6 @@ This project is built with a modern, robust, and scalable tech stack:
 *   **Language**: [TypeScript](https://www.typescriptlang.org/) - For type-safe code and a better developer experience.
 *   **Charting**: [Recharts](https://recharts.org/) - A composable charting library built on React components.
 
-##  Getting Started
-
-To get a local copy up and running, follow these simple steps.
-
-### Prerequisites
-
-You need to have Node.js and npm (or yarn/pnpm) installed on your machine.
-
-*   [Node.js](https://nodejs.org/en/) (v18 or newer recommended)
-*   npm
-
-### Installation
-
-1.  **Clone the repository:**
-    ```sh
-    git clone https://github.com/your-username/wealthwise.git
-    cd wealthwise
-    ```
-
-2.  **Install NPM packages:**
-    ```sh
-    npm install
-    ```
-
-3.  **Set up your environment variables:**
-    Create a `.env.local` file in the root of your project and add your Firebase configuration details. You can get these from the Firebase Console.
-
-    ```env
-    NEXT_PUBLIC_FIREBASE_API_KEY="YOUR_API_KEY"
-    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN="YOUR_AUTH_DOMAIN"
-    NEXT_PUBLIC_FIREBASE_PROJECT_ID="YOUR_PROJECT_ID"
-    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET="YOUR_STORAGE_BUCKET"
-    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID="YOUR_SENDER_ID"
-    NEXT_PUBLIC_FIREBASE_APP_ID="YOUR_APP_ID"
-    ```
-
-4.  **Run the development server:**
-    ```sh
-    npm run dev
-    ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-
 
 ## 📚 Learn More
 
