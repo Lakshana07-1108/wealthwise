@@ -22,9 +22,11 @@ This project is built with a modern, robust, and scalable tech stack:
 *   **Generative AI**: [Genkit](https://firebase.google.com/docs/genkit) - An open-source framework from Google to build AI-powered features.
 *   **Language**: [TypeScript](https://www.typescriptlang.org/) - For type-safe code and a better developer experience.
 *   **Charting**: [Recharts](https://recharts.org/) - A composable charting library built on React components.
+  
 
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/b38c2b32-3a74-46a7-80f3-6cc5b7b88094" />
 
-## 📚 Learn More
+ 📚 Learn More
 
 To learn more about the technologies used in this project, see the following resources:
 
